@@ -10,15 +10,10 @@
 )
 
 (defun delete-nth (n list)
-
-
-(if (zerop n)
-(cdr list)
-(let ((cons (nthcdr (1- n) list)))
-
-(when cons
-(setf (cdr cons) (cddr cons)))
-list)))
+	(if (zerop n)
+		(cdr list)
+		(let ((cons (nthcdr (1- n) list)))
+			(when cons (setf (cdr cons) (cddr cons))) list)))
 
 ;; ------------------------------
 ;;     ALGORITHM FUNCTIONS
