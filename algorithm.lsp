@@ -102,12 +102,11 @@
 
 		(print '(----------))
 		(print opened)
+		(print '(**********))
 		(print closed)
 
 		(setq current (car opened))
 		(setq opened (cdr opened))
-
-		(print current)
 		
 		(if (equal current final)
 			(setq result T)
@@ -131,9 +130,7 @@
 (defun main ()
 	(setq initial_state (get_initial_state))
 	(setq final_state (get_final_state))  
-	;; (print (BFS initial_state final_state))
-	;;(print initial_state)
-	;;(print final_state)
+	(print (BFS initial_state final_state))
 )
 
 (main)
