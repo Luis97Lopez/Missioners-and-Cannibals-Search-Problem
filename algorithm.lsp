@@ -31,8 +31,7 @@
 
 ;; RETURN IF IT'S THE CORRECT STATE
 (defun is_final_state(state)
-	(AND (= (length (remove M (nth 0 state))) 3) (= (length (remove C (nth 0 state))) 3) 
-	(eq (nth 1 state) L))
+	(AND (= (length (remove M (nth 0 state))) 3) (= (length (remove C (nth 0 state))) 3) )
 )
 
 (defun operator_move_the_boat (state)
@@ -87,13 +86,12 @@
 )
 
 (defun has_ended (state)
-	(return)
 	(let ((zone (if (eq (nth 1 state) 'R) 3 0)))
 		(let ((n_missionaries (+ (length (remove 'C (nth zone state))) 
 							(length (remove 'C (nth 2 state))))) 
 			 (n_cannibals 	  (+ (length (remove 'M (nth zone state))) 
 							(length (remove 'M (nth 2 state))))))
-			(if (> n_cannibals n_missionaries)
+			(if (AND (> n_cannibals n_missionaries) (> n_missionaries 0))
 				T
 			)
 		)
@@ -143,18 +141,11 @@
 				(loop for new in new_states do
 					(if (and 	(not (is_state_in_list new opened)) 
 							(not (is_state_in_list new closed)))
-						(setq opened (append opened (list new))))
+						(setq opened (append (list new) opened )))
 				)
 			)
 		)
-
-		(print '(-------------))
-		(print '(ACTUAL))
 		(print current)
-		(print '(ABIERTOS))
-		(print opened)
-		(print '(CERRADOS))
-		(print closed)
 	)
 )
 
