@@ -29,9 +29,32 @@
 )
 
 
-;; GENERATE STATES 
-(defun operator (list)
+;; GENERATE CHILD STATES 
+(defun operator (state)
 	(let ((states_list (list )))
+
+		;; MOVER LA BARCA
+		(let ((copy (copy-list state)))
+			
+			(if (eq (nth 1 copy) 'R)
+				(setf (nth 1 copy) 'L)
+				(setf (nth 1 copy) 'R)
+			)
+			(setq states_list (append states_list (list copy)))
+		)
+
+		;; BAJAR DE LA BARCA
+		(loop for i from 0 to (- (length (nth 2 copy)) 1) do
+			(let ((copy (copy-list state)))
+				(setf (nth i (nth 2 state)))
+				(if (eq (nth 1 copy) 'R)
+					(setf (nth 3 copy) 'L)
+					(setf (nth 0 copy) 'R)
+				)
+			)
+		)
+
+
 		states_list
 	)
 )
