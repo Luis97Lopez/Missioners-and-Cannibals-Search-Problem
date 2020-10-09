@@ -26,7 +26,7 @@
 
 ;; RETURN THE INITIAL STATE
 (defun get_initial_state ()
-	(list (list ) 'R (list 'M 'C) (list 'M 'M 'C 'C)))
+	(list (list ) 'R (list ) (list 'M 'M 'M 'C 'C 'C)))
 
 
 ;; RETURN IF IT'S THE CORRECT STATE
