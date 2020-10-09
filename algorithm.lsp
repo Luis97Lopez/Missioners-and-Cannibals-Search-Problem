@@ -66,6 +66,24 @@
 				(setq states_list (append states_list (list copy)))
 			)
 		)
+
+		;; SUBIR DE LA BARCA
+		(if (< (length (nth 2 state)) 2)
+			(let ((zone (if (eq (nth 1 state) 'R) 3 0)))
+				(loop for i from 0 to (- (length (nth zone state)) 1) do
+					(let ((copy (copy-tree state)) (element (nth i (nth zone state))))
+						; Se quita de la zona
+						(setf (nth zone copy) (delete-nth i (nth zone copy)))
+						; Se agrega a la barca
+						(setf (nth 2 copy) (append (nth 2 copy) (list element)))
+
+						; Se agrega el nuevo estado
+						(setq states_list (append states_list (list copy)))
+					)
+				)
+			)
+		)
+
 		states_list
 	)
 )
