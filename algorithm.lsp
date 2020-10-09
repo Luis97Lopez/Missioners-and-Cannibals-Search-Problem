@@ -31,7 +31,8 @@
 
 ;; RETURN IF IT'S THE CORRECT STATE
 (defun is_final_state(state)
-	(equal state (get_final_state))
+	(AND (= (length (remove M (nth 0 state))) 3) (= (length (remove C (nth 0 state))) 3) 
+	(eq (nth 1 state) L))
 )
 
 
