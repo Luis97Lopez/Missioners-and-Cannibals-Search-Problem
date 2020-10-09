@@ -15,12 +15,12 @@
 
 ;; RETURN THE FINAL STATE
 (defun get_final_state ()
-	(list (list 'M 'M 'M 'C 'C 'C) 'L (list ) (list )))
+	(list (1 1 1 2 2 2 1 0 0 0 0 0 0 0 0))
 
 
 ;; RETURN THE INITIAL STATE
 (defun get_initial_state ()
-	(list (list ) 'R (list ) (list 'M 'M 'M 'C 'C 'C)))
+	(list (0 0 0 0 0 0 1 0 0 1 1 1 2 2 2)))
 
 
 ;; RETURN IF IT'S THE CORRECT STATE
@@ -36,9 +36,9 @@
 		;; MOVER LA BARCA
 		(let ((copy (copy-list state)))
 			
-			(if (eq (nth 1 copy) 'R)
-				(setf (nth 1 copy) 'L)
-				(setf (nth 1 copy) 'R)
+			(if (eq (nth 7 copy) 0)
+				(setf (nth 7 copy) 1)
+				(setf (nth 7 copy) 0)
 			)
 			(setq states_list (append states_list (list copy)))
 		)
