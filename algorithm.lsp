@@ -35,24 +35,19 @@
 	(eq (nth 1 state) L))
 )
 
-
-;; GENERATE CHILD STATES 
-(defun operator (state)
-	(print state)
-	(let ((states_list (list )))
-
-		;; MOVER LA BARCA
-		(let ((copy (copy-tree state)))
-			; Se mueve la barca
-			(if (eq (nth 1 copy) 'R)
-				(setf (nth 1 copy) 'L)
-				(setf (nth 1 copy) 'R)
-			)
-			; Se agrega el nuevo estado
-			(setq states_list (append states_list (list copy)))
+(defun operator_move_the_boat (state)
+	(let ((copy (copy-tree state)))
+		; Se mueve la barca
+		(if (eq (nth 1 copy) 'R)
+			(setf (nth 1 copy) 'L)
+			(setf (nth 1 copy) 'R)
 		)
-		
-		;; BAJAR DE LA BARCA
+		(list copy)
+	)
+)
+
+(defun operator_get_off_the_boat (state)
+	(let ((temp (list )))
 		(loop for i from 0 to (- (length (nth 2 state)) 1) do
 			(let ((copy (copy-tree state)) (element (nth i (nth 2 state))))
 				; Se quita un sólo personaje de la barca
@@ -63,11 +58,15 @@
 					(setf (nth 0 copy) (append (nth 0 copy) (list element)))
 				)
 				; Se agrega el nuevo estado
-				(setq states_list (append states_list (list copy)))
+				(setq temp (append temp (list copy)))
 			)
 		)
+		temp
+	)
+)
 
-		;; SUBIR DE LA BARCA
+(defun operator_get_on_the_boat (state)
+	(let ((temp (list )))
 		(if (< (length (nth 2 state)) 2)
 			(let ((zone (if (eq (nth 1 state) 'R) 3 0)))
 				(loop for i from 0 to (- (length (nth zone state)) 1) do
@@ -78,11 +77,29 @@
 						(setf (nth 2 copy) (append (nth 2 copy) (list element)))
 
 						; Se agrega el nuevo estado
-						(setq states_list (append states_list (list copy)))
+						(setq temp (append temp (list copy)))
 					)
 				)
 			)
 		)
+		temp
+	)
+)
+
+
+;; GENERATE CHILD STATES 
+(defun operator (state)
+	(let ((states_list (list )))
+
+
+		;; MOVER LA BARCA
+		(setq states_list (append states_list (operator_move_the_boat state)))
+		
+		;; BAJAR DE LA BARCA
+		(setq states_list (append states_list (operator_get_off_the_boat state)))
+
+		;; SUBIR DE LA BARCA
+		(setq states_list (append states_list (operator_get_on_the_boat state)))
 
 		states_list
 	)
@@ -100,11 +117,6 @@
 	(loop 
 		(when (or (eq result T) (= (length opened) 0)) (return result)) ;; RETURN CONDITION
 
-		(print '(----------))
-		(print opened)
-		(print '(**********))
-		(print closed)
-
 		(setq current (car opened))
 		(setq opened (cdr opened))
 		
@@ -116,10 +128,18 @@
 				(loop for new in new_states do
 					(if (and 	(not (is_state_in_list new opened)) 
 							(not (is_state_in_list new closed)))
-						(setq opened (append opened (list new))))
+						(setq opened (append opened (list new) )))
 				)
 			)
 		)
+
+		(print '(-------------))
+		(print '(ACTUAL))
+		(print current)
+		(print '(ABIERTOS))
+		(print opened)
+		(print '(CERRADOS))
+		(print closed)
 	)
 )
 
