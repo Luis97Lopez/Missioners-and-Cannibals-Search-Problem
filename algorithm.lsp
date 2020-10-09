@@ -54,7 +54,7 @@
 		
 		;; BAJAR DE LA BARCA
 		(loop for i from 0 to (- (length (nth 2 state)) 1) do
-			(let* ((copy (copy-tree state)) (element (nth i (nth 2 copy))))
+			(let ((copy (copy-tree state)) (element (nth i (nth 2 state))))
 				; Se quita un sólo personaje de la barca
 				(setf (nth 2 copy) (delete-nth i (nth 2 copy)))
 				; Se pone a su lado correspondiente
