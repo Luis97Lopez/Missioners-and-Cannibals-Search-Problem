@@ -86,22 +86,37 @@
 	)
 )
 
+(defun has_ended (state)
+	(return)
+	(let ((zone (if (eq (nth 1 state) 'R) 3 0)))
+		(let ((n_missionaries (+ (length (remove 'C (nth zone state))) 
+							(length (remove 'C (nth 2 state))))) 
+			 (n_cannibals 	  (+ (length (remove 'M (nth zone state))) 
+							(length (remove 'M (nth 2 state))))))
+			(if (> n_cannibals n_missionaries)
+				T
+			)
+		)
+	)
+)
+
 
 ;; GENERATE CHILD STATES 
 (defun operator (state)
-	(let ((states_list (list )))
+	(if (not (has_ended state))
+		(let ((states_list (list )))
 
+			;; MOVER LA BARCA
+			(setq states_list (append states_list (operator_move_the_boat state)))
+			
+			;; BAJAR DE LA BARCA
+			(setq states_list (append states_list (operator_get_off_the_boat state)))
 
-		;; MOVER LA BARCA
-		(setq states_list (append states_list (operator_move_the_boat state)))
-		
-		;; BAJAR DE LA BARCA
-		(setq states_list (append states_list (operator_get_off_the_boat state)))
+			;; SUBIR DE LA BARCA
+			(setq states_list (append states_list (operator_get_on_the_boat state)))
 
-		;; SUBIR DE LA BARCA
-		(setq states_list (append states_list (operator_get_on_the_boat state)))
-
-		states_list
+			states_list
+		)
 	)
 )
 
@@ -128,7 +143,7 @@
 				(loop for new in new_states do
 					(if (and 	(not (is_state_in_list new opened)) 
 							(not (is_state_in_list new closed)))
-						(setq opened (append opened (list new) )))
+						(setq opened (append opened (list new))))
 				)
 			)
 		)
@@ -151,6 +166,7 @@
 	(setq initial_state (get_initial_state))
 	(setq final_state (get_final_state))  
 	(print (BFS initial_state final_state))
+	(print (length closed))
 )
 
 (main)
