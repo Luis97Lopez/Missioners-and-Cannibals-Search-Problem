@@ -26,12 +26,12 @@
 
 ;; RETURN THE INITIAL STATE
 (defun get_initial_state ()
-	(list (list ) 'R (list ) (list 'M 'M 'M 'C 'C 'C)))
+	(list (list ) 'R (list ) (list 'M 'C 'M 'C 'M 'C)))
 
 
 ;; RETURN IF IT'S THE CORRECT STATE
 (defun is_final_state(state)
-	(AND (= (length (remove M (nth 0 state))) 3) (= (length (remove C (nth 0 state))) 3) )
+	(AND (= (length (remove 'M (nth 0 state))) 3) (= (length (remove 'C (nth 0 state))) 3) )
 )
 
 (defun operator_move_the_boat (state)
@@ -86,13 +86,16 @@
 )
 
 (defun has_ended (state)
-	(let ((zone (if (eq (nth 1 state) 'R) 3 0)))
+	(let* ((zone (if (eq (nth 1 state) 'R) 3 0)) (zone2 (abs (- zone 3))))
 		(let ((n_missionaries (+ (length (remove 'C (nth zone state))) 
 							(length (remove 'C (nth 2 state))))) 
 			 (n_cannibals 	  (+ (length (remove 'M (nth zone state))) 
-							(length (remove 'M (nth 2 state))))))
-			(if (AND (> n_cannibals n_missionaries) (> n_missionaries 0))
-				T
+							(length (remove 'M (nth 2 state)))))
+			 (n_missionaries2 (length (remove 'C (nth zone2 state))))
+			 (n_cannibals2    (length (remove 'M (nth zone2 state)))))
+			(if (OR 	(AND (> n_cannibals n_missionaries) (> n_missionaries 0))
+					(AND (> n_cannibals2 n_missionaries2) (> n_missionaries2 0)))
+				T 
 			)
 		)
 	)
@@ -104,14 +107,16 @@
 	(if (not (has_ended state))
 		(let ((states_list (list )))
 
+			;; SUBIR A LA BARCA
+			(setq states_list (append states_list (operator_get_on_the_boat state)))
+
 			;; MOVER LA BARCA
 			(setq states_list (append states_list (operator_move_the_boat state)))
-			
+
 			;; BAJAR DE LA BARCA
 			(setq states_list (append states_list (operator_get_off_the_boat state)))
 
-			;; SUBIR DE LA BARCA
-			(setq states_list (append states_list (operator_get_on_the_boat state)))
+			
 
 			states_list
 		)
@@ -120,7 +125,7 @@
 
 
 ;; Breadth First Search
-(defun BFS (initial final)
+(defun BFS (initial)
 	;; VARIABLES
 	(setq opened (list initial))
 	(setq closed (list))
@@ -133,7 +138,7 @@
 		(setq current (car opened))
 		(setq opened (cdr opened))
 		
-		(if (equal current final)
+		(if (is_final_state current)
 			(setq result T)
 			(progn
 				(setq closed (append closed (list current)))
@@ -156,7 +161,7 @@
 (defun main ()
 	(setq initial_state (get_initial_state))
 	(setq final_state (get_final_state))  
-	(print (BFS initial_state final_state))
+	(print (BFS initial_state))
 	(print (length closed))
 )
 
