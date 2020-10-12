@@ -146,6 +146,37 @@
 				(loop for new in new_states do
 					(if (and 	(not (is_state_in_list new opened)) 
 							(not (is_state_in_list new closed)))
+						(setq opened (append opened (list new)  )))
+				)
+			)
+		)
+		(print current)
+	)
+)
+
+
+;; Depth First Search
+(defun DFS (initial)
+	;; VARIABLES
+	(setq opened (list initial))
+	(setq closed (list))
+	(setq result NIL)
+
+	;; MAIN LOOP
+	(loop 
+		(when (or (eq result T) (= (length opened) 0)) (return result)) ;; RETURN CONDITION
+
+		(setq current (car opened))
+		(setq opened (cdr opened))
+		
+		(if (is_final_state current)
+			(setq result T)
+			(progn
+				(setq closed (append closed (list current)))
+				(setq new_states (operator current))
+				(loop for new in new_states do
+					(if (and 	(not (is_state_in_list new opened)) 
+							(not (is_state_in_list new closed)))
 						(setq opened (append (list new) opened )))
 				)
 			)
